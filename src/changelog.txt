@@ -1,0 +1,14 @@
+GNUSki ChangeLog
+
+Version: 0.2
+
+Big Change
+======================
+- An object class was created
+- Ski dude, rocks and trees are all inheritors from that object class
+
+
+Bad News
+======================
+- POSIX Threads do not function apparently. The code has been compiled in Cygwin under Windows 2000 and in Knoppix but to no avail.
+- The drawing methods are messed up somewhere, because when skiDude is re-drawn, other objects are re-drawn in line with skiDude.
