@@ -7,7 +7,7 @@ GNUSki is an open source clone of [Skifree](https://en.wikipedia.org/wiki/SkiFre
 ## GNUSki around the web
 - [homebrew formula for gnuski](https://formulae.brew.sh/formula/gnuski)
   - [formula code for gnuski](https://github.com/Homebrew/homebrew-core/blob/543cd71456e4813de4e12f33fea6f38f875b2327/Formula/g/gnuski.rb)
-- [ascii cinema recording of gnuski](https://asciinema.org/a/485510)
+- [ascii cinema recording of gnuski](https://asciinema.org/a/669357)
   - [demo.gif](./demo.gif)
 - [Termux](https://termux.dev/en/), an Android terminal emulator and Linux environment app, has a games package:
   - [gnuski package for Termux](https://github.com/termux/termux-packages/tree/master/packages/gnuski)
