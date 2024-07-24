@@ -22,15 +22,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <ncurses.h>
 
 #define MAX_OBJECTS 300
-#define REFRESH_RATE 5000
 
 int main (int argc, char* argv[])
 {
+  const long fps = argc != 2 ? 30l : strtol(argv[1], NULL, 10);
   struct Object player, objects[MAX_OBJECTS];
-  unsigned int c = 0, i = 0, maxRows, maxCols, ticker = 0, score = 0,
+  unsigned int c = 0, i = 0, maxRows, maxCols, score = 0,
     distance = 0, speed = 1, style = 0;
   enum mode {loop, lose, win} state = loop;
   char facing[2] = {'s', 'n'};   /* Player facing, object facing */
@@ -86,10 +87,7 @@ int main (int argc, char* argv[])
 	  break;
 	}
 
-      if (ticker == REFRESH_RATE)
-	{
 	  clear ();
-	  ticker = 0;
 
 	  /* Check for collisions and draw the objects */
 	  for (i = 0; i < MAX_OBJECTS; i++)
@@ -110,10 +108,9 @@ int main (int argc, char* argv[])
 	  printw ("Speed:    %02im/s\n", speed);
 	  printw ("Style:    %4i", style);
 	  distance += speed;
-	}
       refresh ();
       if (speed > 0)
-	ticker++;
+      usleep(1000000 / fps);
       c = getch ();
     }
   clear ();
