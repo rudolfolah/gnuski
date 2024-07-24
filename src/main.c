@@ -62,13 +62,29 @@ int main (int argc, char* argv[])
       switch (c)
 	{
 	case KEY_LEFT: case 'h': case 'H':
-	  facing[0] = '4';
-	  facing[1] = '2';
+	  if (facing[0] == '3' && facing[1] == '1')
+	  {
+	    facing[0] = 's';
+	    facing[1] = 'n';
+	  }
+	  else
+	  {
+	    facing[0] = '4';
+	    facing[1] = '2';
+	  }
 	  break;
 
 	case KEY_RIGHT: case 'l': case 'L':
-	  facing[0] = '3';
-	  facing[1] = '1';
+	  if (facing[0] == '4' && facing[1] == '2')
+	  {
+	    facing[0] = 's';
+	    facing[1] = 'n';
+	  }
+	  else
+	  {
+	    facing[0] = '3';
+	    facing[1] = '1';
+	  }
 	  break;
 
 	case KEY_UP: case 'k': case 'K':
