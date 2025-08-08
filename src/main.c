@@ -29,7 +29,7 @@
 
 int main (int argc, char* argv[])
 {
-  const long fps = argc != 2 ? 30l : strtol(argv[1], NULL, 10);
+  const long fps = argc != 2 ? 20l : strtol(argv[1], NULL, 10);
   struct Object player, objects[MAX_OBJECTS];
   unsigned int c = 0, i = 0, maxRows, maxCols, score = 0,
     distance = 0, speed = 1, style = 0;
@@ -109,7 +109,6 @@ int main (int argc, char* argv[])
 	  printw ("Style:    %4i", style);
 	  distance += speed;
       refresh ();
-      if (speed > 0)
       usleep(1000000 / fps);
       c = getch ();
     }
