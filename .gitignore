@@ -2,3 +2,11 @@
 commit_by_date.sh
 *~
 src/gnuski
+
+build/
+packages/
+*.deb
+*.tar.gz
+*.dmg
+.vscode/
+.idea/
