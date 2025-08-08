@@ -22,16 +22,17 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <ncurses.h>
 
 #define MAX_OBJECTS 300
-#define REFRESH_RATE 5000
 
 int main (int argc, char* argv[])
 {
+  const long fps = argc != 2 ? 20l : strtol(argv[1], NULL, 10);
   struct Object player, objects[MAX_OBJECTS];
-  unsigned int c = 0, i = 0, maxRows, maxCols, ticker = 0, score = 0,
-    distance = 0, speed = 1, style = 0;
+  unsigned int c = 0, i = 0, maxRows, maxCols, score = 0,
+    distance = 0, speed = 2, style = 0, frame_counter = 0;
   enum mode {loop, lose, win} state = loop;
   char facing[2] = {'s', 'n'};   /* Player facing, object facing */
 
@@ -77,7 +78,7 @@ int main (int argc, char* argv[])
 	  break;
 
 	case KEY_DOWN: case 'j': case 'J':
-	  if (speed < 3)
+	  if (speed < 4)
 	    speed++;
 	  break;
 
@@ -86,17 +87,22 @@ int main (int argc, char* argv[])
 	  break;
 	}
 
-      if (ticker == REFRESH_RATE)
-	{
 	  clear ();
-	  ticker = 0;
 
 	  /* Check for collisions and draw the objects */
 	  for (i = 0; i < MAX_OBJECTS; i++)
 	    {
 	      if (objects[i].type != none && collision (player, objects[i]))
 		state = lose;
-	      moveObject (&objects[i], facing[1], speed);
+	      /* Calculate actual movement based on speed and frame counter */
+	      int actual_speed = 0;
+	      if (speed == 0) actual_speed = 0;
+	      else if (speed == 1 && frame_counter % 4 == 0) actual_speed = 1;
+	      else if (speed == 2 && frame_counter % 3 == 0) actual_speed = 1;
+	      else if (speed == 3 && frame_counter % 2 == 0) actual_speed = 1;
+	      else if (speed == 4) actual_speed = 1;
+	      
+	      moveObject (&objects[i], facing[1], actual_speed);
 	      if (objects[i].y < 0)
 		setPosition (&objects[i], rand () % (maxCols*2),
 			     rand () % maxRows + maxRows);
@@ -110,10 +116,9 @@ int main (int argc, char* argv[])
 	  printw ("Speed:    %02im/s\n", speed);
 	  printw ("Style:    %4i", style);
 	  distance += speed;
-	}
+	  frame_counter++;
       refresh ();
-      if (speed > 0)
-	ticker++;
+      usleep(1000000 / fps);
       c = getch ();
     }
   clear ();
