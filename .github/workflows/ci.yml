@@ -1,0 +1,92 @@
+name: Build and Package
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential libncurses5-dev libncurses6-dev
+    
+    - name: Build
+      run: ./build.sh
+    
+    - name: Test
+      run: |
+        cd build
+        file gnuski
+        ldd gnuski
+    
+    - name: Package
+      run: ./package.sh
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: gnuski-linux
+        path: packages/*
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        brew install cmake ncurses
+    
+    - name: Build
+      run: ./build.sh
+    
+    - name: Test
+      run: |
+        cd build
+        file gnuski
+        otool -L gnuski
+    
+    - name: Package
+      run: ./package.sh
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: gnuski-macos
+        path: packages/*
+
+  release:
+    needs: [build-linux, build-macos]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+    - name: Download Linux artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: gnuski-linux
+        path: packages-linux
+    
+    - name: Download macOS artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: gnuski-macos
+        path: packages-macos
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          packages-linux/*
+          packages-macos/*
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
