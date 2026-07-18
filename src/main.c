@@ -123,9 +123,9 @@ int main (int argc, char* argv[])
     }
   clear ();
   if (state == win)
-    printw ("You won.");
+    printw ("You won.\n");
   else
-    printw ("You lost.");
+    printw ("You lost.\n");
   printw ("Your score was %i. You traveled %im.\nPress any key to continue...",
 	  distance+style, distance);
   refresh ();
